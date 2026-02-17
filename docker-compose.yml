@@ -21,7 +21,7 @@ services:
     build: ./wn-rajar-ms_reader/Frontend
     image: reader-front-image
     ports:
-      - "8000:80"                        # Map le port 80 du container vers le 8000 de l'hôte
+      - "8000:5173"                        # Map le port 80 du container vers le 8000 de l'hôte
     depends_on:
       - reader-back
     environment:
@@ -41,6 +41,11 @@ services:
       - "5433:5432"       
     volumes:
       - ./wn-rajar-ms_reader/Db/:/docker-entrypoint-initdb.d/
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   # --------------------
   # Writer Backend
@@ -53,7 +58,8 @@ services:
     env_file:
       - ./wm-rajar-ms_writer/BACK/.env.docker
     depends_on:
-      - writer-db
+      writer-db:
+        condition: service_healthy
 
   # --------------------
   # Writer Frontend
@@ -62,7 +68,7 @@ services:
     build: ./wm-rajar-ms_writer/FRONT
     image: writer-front-image
     ports:
-      - "8001:80"
+      - "8001:5173"
     depends_on:
       - writer-back
     environment:
@@ -82,4 +88,8 @@ services:
       - "5434:5432"       
     volumes:
       - ./wm-rajar-ms_writer/BDD/:/docker-entrypoint-initdb.d/
-
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U writer_user -d worldnews"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
