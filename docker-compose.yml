@@ -1,0 +1,85 @@
+version: '3.9'  # Version de Docker Compose, 3.9 fonctionne pour les fonctionnalités récentes
+
+services:
+  # --------------------
+  # Reader Backend
+  # --------------------
+  reader-back:
+    build: ./wn-rajar-ms_reader/Backend  # Chemin vers le Dockerfile du backend reader
+    image: reader-back-image            # Nom donné à l'image construite
+    ports:
+      - "3002:3000"                     # Map le port 3000 du container vers le 3002 de l'hôte
+    env_file:
+      - ./wn-rajar-ms_reader/Backend/.env  # Variables d'environnement (ex: DB_HOST=reader-db)
+    depends_on:
+      - reader-db                        # Démarre ce service après la BDD
+
+  # --------------------
+  # Reader Frontend
+  # --------------------
+  reader-front:
+    build: ./wn-rajar-ms_reader/Frontend
+    image: reader-front-image
+    ports:
+      - "8000:80"                        # Map le port 80 du container vers le 8000 de l'hôte
+    depends_on:
+      - reader-back
+    environment:
+      VITE_API_URL: http://localhost:3002
+
+  # --------------------
+  # Reader Database
+  # --------------------
+  reader-db:
+    image: postgres:15                    # Image officielle PostgreSQL
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: worldnewsArticles
+    ports:
+      - "5433:5432"       
+    volumes:
+      - ./wn-rajar-ms_reader/Db/:/docker-entrypoint-initdb.d/
+
+  # --------------------
+  # Writer Backend
+  # --------------------
+  writer-back:
+    build: ./wm-rajar-ms_writer/BACK
+    image: writer-back-image
+    ports:
+      - "3001:3000"
+    env_file:
+      - ./wm-rajar-ms_writer/BACK/.env.docker
+    depends_on:
+      - writer-db
+
+  # --------------------
+  # Writer Frontend
+  # --------------------
+  writer-front:
+    build: ./wm-rajar-ms_writer/FRONT
+    image: writer-front-image
+    ports:
+      - "8001:80"
+    depends_on:
+      - writer-back
+    environment:
+      VITE_API_URL: http://localhost:3001/api
+
+  # --------------------
+  # Writer Database
+  # --------------------
+  writer-db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: writer_user
+      POSTGRES_PASSWORD: writer_pass
+      POSTGRES_DB: writer_db
+    ports:
+      - "5434:5432"       
+    volumes:
+      - ./wm-rajar-ms_writer/BDD/:/docker-entrypoint-initdb.d/
+
