@@ -39,6 +39,8 @@ services:
       POSTGRES_DB: worldnewsArticles_test
     ports:
       - "5435:5432"
+    volumes:
+      - ./wn-rajar-ms_reader/DbTest/:/docker-entrypoint-initdb.d/
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -85,6 +87,8 @@ services:
       POSTGRES_DB: writer_db_test
     ports:
       - "5436:5432"
+    volumes:
+      - ./wm-rajar-ms_writer/BDDTest/:/docker-entrypoint-initdb.d/
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U writer_user -d writer_db_test"]
       interval: 5s
