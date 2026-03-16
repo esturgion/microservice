@@ -2,7 +2,7 @@ version: '3.9'  # Version de Docker Compose, 3.9 fonctionne pour les fonctionnal
 
 services:
   # --------------------
-  # Reader Backend
+  # Reader Backend e2e
   # --------------------
   reader-back:
     build: ./wn-rajar-ms_reader/Backend  # Chemin vers le Dockerfile du backend reader
@@ -28,7 +28,7 @@ services:
       VITE_API_URL: http://localhost:3002
 
   # --------------------
-  # Reader Database Tests
+  # Reader Database Tests e2e
   # --------------------
   reader-db-test:
     image: postgres:15
@@ -49,7 +49,7 @@ services:
 
 
   # --------------------
-  # Writer Backend
+  # Writer Backend e2e
   # --------------------
   writer-back:
     build: ./wm-rajar-ms_writer/BACK
@@ -76,7 +76,7 @@ services:
       VITE_API_URL: http://localhost:3001/api
 
   # --------------------
-  # Writer Database Tests
+  # Writer Database Tests e2e
   # --------------------
   writer-db-test:
     image: postgres:15
@@ -91,6 +91,73 @@ services:
       - ./wm-rajar-ms_writer/BDDTest/:/docker-entrypoint-initdb.d/
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U writer_user -d writer_db_test"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # --------------------
+  # Writer Backend Integration
+  # --------------------
+  writer-back-integration:
+    build: ./wm-rajar-ms_writer/BACK
+    image: writer-back-integration-image
+    ports:
+      - "3010:3000"
+    env_file:
+      - ./wm-rajar-ms_writer/BACK/.env.integration
+    depends_on:
+      writer-db-integration:
+        condition: service_healthy
+
+ # --------------------
+  # Writer Database Integration
+  # --------------------
+  writer-db-integration:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: writer_user
+      POSTGRES_PASSWORD: writer_pass
+      POSTGRES_DB: writer_db_integration
+    ports:
+      - "5437:5432"
+    volumes:
+      - ./wm-rajar-ms_writer/BDDTest/:/docker-entrypoint-initdb.d/
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U writer_user -d writer_db_integration"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # --------------------
+  # Reader Backend Integration
+  # --------------------
+  reader-back-integration:
+    build: ./wn-rajar-ms_reader/Backend
+    image: reader-back-integration-image
+    ports:
+      - "3020:3000"
+    env_file:
+      - ./wn-rajar-ms_reader/Backend/.env.integration
+    depends_on:
+      reader-db-integration:
+        condition: service_healthy
+  # --------------------
+  # Reader Database Integration
+  # --------------------
+  reader-db-integration:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: worldnewsArticles_integration
+    ports:
+      - "5438:5432"
+    volumes:
+      - ./wn-rajar-ms_reader/DbTest/:/docker-entrypoint-initdb.d/
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d reader_db_integration"]
       interval: 5s
       timeout: 5s
       retries: 5

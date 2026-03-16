@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { articleService } from '../src/services/article.service.js';
-import { articleRepository } from '../src/repository/article.repository.js';
+import { articleService } from '../../src/services/article.service.js';
+import { articleRepository } from '../../src/repository/article.repository.js';
 
-vi.mock('../src/repository/article.repository', () => {
+vi.mock('../../src/repository/article.repository', () => {
   return {
     articleRepository: {
       create: vi.fn(),
