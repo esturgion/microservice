@@ -87,4 +87,54 @@ describe('Article API Integration', () => {
         expect(response.body).toHaveProperty('message', 'Une erreur interne est survenue');
     });
 
+    it('should update an existing article', async () => {
+        const repo = AppDataSource.getRepository(Article);
+
+        const article = await repo.save({
+            title: 'Original title',
+            subtitle: 'Original subtitle',
+            subhead: 'Original subhead',
+            body: 'Original body',
+            category: { id: 1 } as any,
+        });
+
+        const updatedData = {
+            title: 'Updated title',
+            subtitle: 'Updated subtitle',
+            subhead: 'Updated subhead',
+            body: 'Updated body',
+            categoryId: 1,
+        };
+
+        const response = await request(app)
+            .patch(`/api/articles/${article.id}`)
+            .send(updatedData);
+
+        expect(response.status).toBe(200);
+        expect(response.body).toHaveProperty('message');
+
+        const updatedArticle = await repo.findOneBy({ id: article.id });
+
+        expect(updatedArticle).not.toBeNull();
+        expect(updatedArticle?.title).toBe(updatedData.title);
+        expect(updatedArticle?.subtitle).toBe(updatedData.subtitle);
+        expect(updatedArticle?.subhead).toBe(updatedData.subhead);
+        expect(updatedArticle?.body).toBe(updatedData.body);
+    });
+
+    it('should return error if article does not exist', async () => {
+        const response = await request(app)
+            .patch('/api/articles/9999')
+            .send({
+            title: 'Updated title',
+            subtitle: 'Updated subtitle',
+            subhead: 'Updated subhead',
+            body: 'Updated body',
+            categoryId: 1,
+            });
+
+        expect(response.status).toBe(404);
+    });
+
+    
 });
