@@ -6,15 +6,15 @@ import { app } from '../../src/app.js';
 import { Article } from '../../src/models/article.model.js';
 
 describe('Article API Integration', () => {
-  beforeAll(async () => {
-    // Initialisation de la connexion DB
-    await AppDataSource.initialize();
-  });
+    beforeAll(async () => {
+        // Initialisation de la connexion DB
+        await AppDataSource.initialize();
+    });
 
-  afterAll(async () => {
-    // Fermeture de la connexion DB
-    await AppDataSource.destroy();
-  });
+    afterAll(async () => {
+        // Fermeture de la connexion DB
+        await AppDataSource.destroy();
+    });
 
     beforeEach(async () => {
         const repo = AppDataSource.getRepository(Article);
@@ -135,6 +135,4 @@ describe('Article API Integration', () => {
 
         expect(response.status).toBe(404);
     });
-
-    
 });
