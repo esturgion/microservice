@@ -1,0 +1,6 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Lint pour les front
+npm --prefix ./wm-rajar-ms_writer/FRONT run lint && \
+npm --prefix ./wn-rajar-ms_reader/Frontend run lint
