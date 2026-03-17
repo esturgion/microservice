@@ -20,6 +20,7 @@ export default function ArticleList() {
   const [pagination, setPagination] = useState<PaginationInfo | null>(null);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
     fetchArticles(page, limit)
       .then(data => {

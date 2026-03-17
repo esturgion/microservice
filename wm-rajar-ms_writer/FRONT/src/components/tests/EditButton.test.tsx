@@ -1,4 +1,3 @@
-/// <reference types="vitest" />
 import { render, screen, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';
 import EditButton from '../ArticleList/Button';

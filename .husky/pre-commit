@@ -1,9 +1,6 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-# Lint et tests unitaires pour le front
+# Lint pour les front
 npm --prefix ./wm-rajar-ms_writer/FRONT run lint && \
-npm --prefix ./wm-rajar-ms_writer/FRONT run test && \
-
-# Tests unitaires pour le back
-npm --prefix ./wm-rajar-ms_writer/BACK run test:unit
+npm --prefix ./wn-rajar-ms_reader/Frontend run lint

@@ -1,4 +1,4 @@
-import { test as base, type Page, type Locator } from '@playwright/test';
+import { type Page, type Locator } from '@playwright/test';
 
 export default class HomePage {
   public page: Page;
