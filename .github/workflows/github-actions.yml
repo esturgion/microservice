@@ -83,16 +83,10 @@ jobs:
       - name: Docker compose
         run: docker compose -f docker-compose.test.yml up -d
       
-      - name: Check docker service
-        run: |
-          until curl -s -f http://localhost:3010/health; do
-            sleep 1
-          done
-      
       - name: Run Back integration tests
         run: npm run test:inte
         working-directory: wm-rajar-ms_writer/BACK
 
       - name: Stop Docker containers
         if: always()
-        run: docker-compose -f docker-compose.test.yml down -v
+        run: docker compose -f docker-compose.test.yml down -v
