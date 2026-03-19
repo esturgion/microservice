@@ -60,11 +60,24 @@ jobs:
           DB_USER=${{ secrets.DB_USER }}
           DB_PASSWORD=${{ secrets.DB_PASSWORD }}
           DB_NAME=${{ secrets.DB_NAME }}
-          EOF 
+          EOF
+          
+          cat <<EOF > wm-rajar-ms_writer/BACK/.env.integration
+          DB_HOST=${{ secrets.WRITER_INTE_DB_HOST }}
+          DB_PORT=${{ secrets.WRITER_INTE_DB_PORT }}
+          DB_USER=${{ secrets.WRITER_INTE_DB_USER }}
+          DB_PASSWORD=${{ secrets.WRITER_INTE_DB_PASSWORD }}
+          DB_NAME=${{ secrets.WRITER_INTE_DB_NAME }}
+          EOF
 
           cat <<EOF > wn-rajar-ms_reader/Backend/.env.test
           PORT=${{ secrets.READER_PORT }}
           DATABASE_URL=${{ secrets.READER_DATABASE_URL }}
+          EOF
+          
+          cat <<EOF > wn-rajar-ms_reader/Backend/.env.integration
+          PORT=${{ secrets.READER_INTEGRATION_PORT }}
+          DATABASE_URL=${{ secrets.READER_INTEGRATION_DATABASE_URL }}
           EOF
       
       - name: Docker compose
