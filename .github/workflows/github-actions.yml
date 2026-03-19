@@ -61,6 +61,11 @@ jobs:
           DB_PASSWORD=${{ secrets.DB_PASSWORD }}
           DB_NAME=${{ secrets.DB_NAME }}
           EOF 
+
+          cat <<EOF > wn-rajar-ms_reader/Backend/.env.test
+          PORT=${{ secrets.READER_PORT }}
+          DATABASE_URL=${{ secrets.READER_DATABASE_URL }}
+          EOF
       
       - name: Docker compose
         run: docker compose -f docker-compose.test.yml up -d
