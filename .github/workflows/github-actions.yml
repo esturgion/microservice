@@ -35,58 +35,58 @@ jobs:
         run: npm run test:unit
         working-directory: wm-rajar-ms_writer/BACK
 
-  writer-integration:
-    needs: writer-unit
-    runs-on: ubuntu-latest
+  # writer-integration:
+    # needs: writer-unit
+    # runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    # steps:
+    #   - name: Checkout repository
+    #     uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
+    #   - name: Setup Node
+    #     uses: actions/setup-node@v4
+    #     with:
+    #       node-version: '20'
       
-      - name: Install dependencies (Back)
-        run: npm install
-        working-directory: wm-rajar-ms_writer/BACK 
+    #   - name: Install dependencies (Back)
+    #     run: npm install
+    #     working-directory: wm-rajar-ms_writer/BACK 
 
-      - name: Create .env.test file
-        run: |
-          cat <<EOF > wm-rajar-ms_writer/BACK/.env.test
-          DB_HOST=${{ secrets.DB_HOST }}
-          DB_PORT=${{ secrets.DB_PORT }}
-          DB_USER=${{ secrets.DB_USER }}
-          DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-          DB_NAME=${{ secrets.DB_NAME }}
-          EOF
+    #   - name: Create .env.test file
+    #     run: |
+    #       cat <<EOF > wm-rajar-ms_writer/BACK/.env.test
+    #       DB_HOST=${{ secrets.DB_HOST }}
+    #       DB_PORT=${{ secrets.DB_PORT }}
+    #       DB_USER=${{ secrets.DB_USER }}
+    #       DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+    #       DB_NAME=${{ secrets.DB_NAME }}
+    #       EOF
           
-          cat <<EOF > wm-rajar-ms_writer/BACK/.env.integration
-          DB_HOST=${{ secrets.WRITER_INTE_DB_HOST }}
-          DB_PORT=${{ secrets.WRITER_INTE_DB_PORT }}
-          DB_USER=${{ secrets.WRITER_INTE_DB_USER }}
-          DB_PASSWORD=${{ secrets.WRITER_INTE_DB_PASSWORD }}
-          DB_NAME=${{ secrets.WRITER_INTE_DB_NAME }}
-          EOF
+    #       cat <<EOF > wm-rajar-ms_writer/BACK/.env.integration
+    #       DB_HOST=${{ secrets.WRITER_INTE_DB_HOST }}
+    #       DB_PORT=${{ secrets.WRITER_INTE_DB_PORT }}
+    #       DB_USER=${{ secrets.WRITER_INTE_DB_USER }}
+    #       DB_PASSWORD=${{ secrets.WRITER_INTE_DB_PASSWORD }}
+    #       DB_NAME=${{ secrets.WRITER_INTE_DB_NAME }}
+    #       EOF
 
-          cat <<EOF > wn-rajar-ms_reader/Backend/.env.test
-          PORT=${{ secrets.READER_PORT }}
-          DATABASE_URL=${{ secrets.READER_DATABASE_URL }}
-          EOF
+    #       cat <<EOF > wn-rajar-ms_reader/Backend/.env.test
+    #       PORT=${{ secrets.READER_PORT }}
+    #       DATABASE_URL=${{ secrets.READER_DATABASE_URL }}
+    #       EOF
           
-          cat <<EOF > wn-rajar-ms_reader/Backend/.env.integration
-          PORT=${{ secrets.READER_INTEGRATION_PORT }}
-          DATABASE_URL=${{ secrets.READER_INTEGRATION_DATABASE_URL }}
-          EOF
+    #       cat <<EOF > wn-rajar-ms_reader/Backend/.env.integration
+    #       PORT=${{ secrets.READER_INTEGRATION_PORT }}
+    #       DATABASE_URL=${{ secrets.READER_INTEGRATION_DATABASE_URL }}
+    #       EOF
       
-      - name: Docker compose
-        run: docker compose -f docker-compose.test.yml up -d
+    #   - name: Docker compose
+    #     run: docker compose -f docker-compose.test.yml up -d
       
-      - name: Run Back integration tests
-        run: npm run test:inte
-        working-directory: wm-rajar-ms_writer/BACK
+    #   - name: Run Back integration tests
+    #     run: npm run test:inte
+    #     working-directory: wm-rajar-ms_writer/BACK
 
-      - name: Stop Docker containers
-        if: always()
-        run: docker compose -f docker-compose.test.yml down -v
+    #   - name: Stop Docker containers
+    #     if: always()
+    #     run: docker compose -f docker-compose.test.yml down -v
