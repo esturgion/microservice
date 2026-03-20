@@ -10,7 +10,7 @@ services:
     ports:
       - "3002:3000"                     # Map le port 3000 du container vers le 3002 de l'hôte
     env_file:
-      - ./wn-rajar-ms_reader/Backend/.env.test  # Variables d'environnement (ex: DB_HOST=reader-db)
+      - ./wn-rajar-ms_reader/Backend/.env.test  # Variables d'environnement
     depends_on:
       - reader-db-test                        # Démarre ce service après la BDD
 
